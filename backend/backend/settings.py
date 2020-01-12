@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'todo', # this was added, this registers todo as app Django can recognize
 ]
 
 MIDDLEWARE = [
