@@ -7,6 +7,7 @@ class App extends Component {
     super(props);
     this.state = {
         viewCompleted: false,
+        viewAll: false,
         activeItem: {
         title: "",
         description: "",
@@ -25,12 +26,19 @@ class App extends Component {
             .then(res => this.setState({ todoList: res.data }))
             .catch(err => console.log(err));
     };
-    displayCompleted = status => {
+
+
+    displayCompleted = (status) => {       
         if (status) {
             return this.setState({ viewCompleted: true });
         }
             return this.setState({ viewCompleted: false });
     };
+
+    toggleShowAll = () => {
+        return this.setState({viewAll: !this.state.viewAll})
+    }
+
     renderTabList = () => {
         return (
             <div className="my-5 tab-list">
@@ -48,11 +56,30 @@ class App extends Component {
         );
     };
 
+    renderShowAll = () => {
+        return (
+            <div className="my-5 tab-list">
+                <span
+                    onClick={() => this.toggleShowAll()}
+                    className={this.state.viewAll ? "active" : ""}
+                > Show All
+                </span>
+            </div>
+        );
+    }
+
     renderItems = () => {
         const { viewCompleted } = this.state;
-        const newItems = this.state.todoList.filter(
-            item => item.completed === viewCompleted
-        );
+        let newItems = []
+
+        if(!this.state.viewAll){
+            newItems = this.state.todoList.filter(
+                item => item.completed === viewCompleted
+            );            
+        } else {
+            newItems = this.state.todoList;
+        }
+
 
         return newItems.map(item => (
             <li
@@ -129,7 +156,9 @@ class App extends Component {
                                 Add task
                                 </button>
                             </div>
-                            {this.renderTabList()}
+                            {!this.state.viewAll ? this.renderTabList() : null}
+                         {/*   {this.renderTabList()}   */}
+                            {this.renderShowAll()}
                             <ul className="list-group list-group-flush">
                                 {this.renderItems()}
                             </ul>
